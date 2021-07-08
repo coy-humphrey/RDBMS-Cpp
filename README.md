@@ -22,3 +22,5 @@ The system consists of the following components:
 * Query Engine (QE)
 * * Implements query operations such as Filter, Project, and Join (equality only for join condition)
 * * Under PDFs, see Project 4 for more details.
+
+I'm currently rewriting this project in Rust here: https://github.com/coy-humphrey/RDBMS-Rust
