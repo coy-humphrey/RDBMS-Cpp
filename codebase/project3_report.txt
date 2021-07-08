@@ -1,0 +1,51 @@
+1. Index Entry Format
+- Show your index entry design (structure).
+
+Index entries are represented in 8 bytes. The first 4 bytes can be interpreted as 1. An Integer, 2. A Real, or 3. An offset to a varchar. The last 4 bytes are an integer giving the page number of the child page.
+
+Index Entry struct:
+{
+	union
+	{
+		int32_t integer;
+		float real;
+		int32_t varcharOffset;
+	}
+	int32_t childPage;
+}
+
+Data entries contain 4 bytes in the same format as in index entries, where they can be interpreted as an integer, real, or offset to varchar. Data entries also contain an RID.
+
+Data Entry struct:
+{
+	union
+	{
+		int32_t integer;
+		float real;
+		int32_t varcharOffset;
+	}
+	RID rid;
+}
+
+3. Page Format
+
+By making each Index and Data entry a fixed size, we can access an arbitrary numbered entry in constant time. By inlining the ints and reals, we can save some space. Varchar data is stored starting at the end of the page, and grows towards the middle. Each data/index entry contains an offset to the varchar, and the varchar itself is stored as a 4 byte int followed by the varchar data.
+
+- Show your internal-page (non-leaf node) design.
+[1 byte - Page type | 2 bytes - Number of entries in page | 2 bytes - offset to free space | 4 bytes leftmost child page | N * sizeof(IndexEntry) bytes - Some number of index entries | Free Space | Varchar data (if attribute is of type varchar)]
+
+- Show your leaf-page (leaf node) design.
+[1 byte - Page type | 4 bytes - next page number | 4 bytes - prev page number | 2 bytes - Number of entries in page | 2 bytes - offset to free space | N * sizeof(DataEntry) bytes - Some number of data entries | Free space | Varchar data (if attribute is of type varchar)]
+
+4. Implementation Detail
+- Have you added your own source file (.cc or .h)?
+
+
+- Other implementation details:
+
+IXFileHandle is a wrapper around the pfm FileHandle. It passes all operations onto a private internal FileHandle.
+
+5. Other (optional)
+- Freely use this section to tell us about things that are related to the project 3, but not related to the other sections (optional)
+
+Please feel free to contact me, either in section or at cmhumphr@ucsc.edu if you have any questions.
